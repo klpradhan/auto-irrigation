@@ -10,6 +10,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 public class DeviceDTO {
+    private Long deviceId;
     private String serialNum;
     private String status;
     private String availability;
@@ -18,7 +19,8 @@ public class DeviceDTO {
     private Date createdDate;
     private Date modifiedDate;
 
-    public DeviceDTO(String serialNum, String status, String availability, String alertEmail, String alertPhone, Date createdDate, Date modifiedDate) {
+    public DeviceDTO(Long deviceId, String serialNum, String status, String availability, String alertEmail, String alertPhone, Date createdDate, Date modifiedDate) {
+        this.deviceId = deviceId;
         this.serialNum = serialNum;
         this.status = status;
         this.availability = availability;
@@ -31,7 +33,8 @@ public class DeviceDTO {
     @Override
     public String toString() {
         return "DeviceDTO{" +
-                "serialNum='" + serialNum + '\'' +
+                "deviceId=" + deviceId +
+                ", serialNum='" + serialNum + '\'' +
                 ", status='" + status + '\'' +
                 ", availability='" + availability + '\'' +
                 ", alertEmail='" + alertEmail + '\'' +

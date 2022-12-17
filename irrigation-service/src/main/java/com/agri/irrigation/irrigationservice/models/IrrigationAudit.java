@@ -46,4 +46,14 @@ public class IrrigationAudit {
     @DateTimeFormat(pattern = "yyyy-MM-DD hh:mm:ss")
     private Date endTime = new Date();
 
+    public IrrigationAudit(Long plotId, Long deviceId, Long slotsTime, String status, Long alertId, String message, Date startTime, Date endTime) {
+        this.plotId = plotId;
+        this.deviceId = deviceId;
+        this.slotsTime = slotsTime;
+        this.status = status;
+        this.alertId = alertId;
+        this.message = message;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
 }

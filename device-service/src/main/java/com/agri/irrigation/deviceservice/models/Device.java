@@ -1,5 +1,6 @@
 package com.agri.irrigation.deviceservice.models;
 
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

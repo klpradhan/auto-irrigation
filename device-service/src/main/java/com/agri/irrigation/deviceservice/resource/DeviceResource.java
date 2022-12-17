@@ -1,5 +1,7 @@
 package com.agri.irrigation.deviceservice.resource;
 
+import com.agri.irrigation.deviceservice.dto.DeviceDTO;
+import com.agri.irrigation.deviceservice.dto.DeviceStatusDTO;
 import com.agri.irrigation.deviceservice.models.Device;
 import com.agri.irrigation.deviceservice.services.DeviceInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +28,8 @@ public class DeviceResource {
      * @return Device details
      */
     @GetMapping(path = "/devices/{deviceId}")
-    public ResponseEntity<Device> getDeviceInfo(@PathVariable("deviceId") String deviceId) {
-        Device foundDevice = deviceInfo.getDetails(Long.valueOf(deviceId));
+    public ResponseEntity<DeviceDTO> getDeviceInfo(@PathVariable("deviceId") String deviceId) {
+        DeviceDTO foundDevice = deviceInfo.getDetails(Long.valueOf(deviceId));
         if (foundDevice == null) {
             return ResponseEntity.notFound().build();
         } else {
@@ -67,6 +69,22 @@ public class DeviceResource {
     @PutMapping("/devices/{deviceId}")
     public ResponseEntity<Device> updateDevice(@RequestBody Device deviceObj, @PathVariable Long deviceId) {
         Device updatedDevice = deviceInfo.updateDetails(deviceObj);
+        if (updatedDevice == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(updatedDevice);
+        }
+    }
+
+    /**
+     *
+     * @param deviceObj
+     * @param deviceId
+     * @return Updated device object
+     */
+    @PutMapping("/devices/{deviceId}/status")
+    public ResponseEntity<Device> updateDevice(@RequestBody DeviceStatusDTO status) {
+        Device updatedDevice = deviceInfo.updateDeviceStatus(status);
         if (updatedDevice == null) {
             return ResponseEntity.notFound().build();
         } else {

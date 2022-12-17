@@ -27,14 +27,14 @@ public class IrrigationResource {
     /**
      * Retry "retry" times, calling Device check service
      */
-    @Value("{irrigation.retry}")
-    private Integer retry;
+    @Value("${irrigation.retry}")
+    private String retry;
 
     /**
      * Retry after retryDelay secs
      */
-    @Value("{irrigation.retry.delay}")
-    private Integer retryDelay;
+    @Value("${irrigation.retry.delay}")
+    private String retryDelay;
 
     /**
      * Start Irrigation on a plot of land
@@ -42,7 +42,7 @@ public class IrrigationResource {
     @PostMapping(path = "/irrigation/{plotId}")
     public ResponseEntity<IrrigationAudit> irrigatePlot(@PathVariable("plotId") String plotId)
             throws URISyntaxException {
-        IrrigationAudit response = irrigationInfo.irrigate(Long.valueOf(plotId), retry, retryDelay);
+        IrrigationAudit response = irrigationInfo.irrigate(Long.valueOf(plotId), Integer.valueOf(retry), Integer.valueOf(retryDelay));
         if(response == null) {
             return ResponseEntity.notFound().build();
         } else {
