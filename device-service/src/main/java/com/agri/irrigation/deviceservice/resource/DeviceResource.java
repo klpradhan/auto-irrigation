@@ -4,7 +4,9 @@ import com.agri.irrigation.deviceservice.dto.DeviceDTO;
 import com.agri.irrigation.deviceservice.dto.DeviceStatusDTO;
 import com.agri.irrigation.deviceservice.models.Device;
 import com.agri.irrigation.deviceservice.services.DeviceInfo;
+import com.agri.irrigation.deviceservice.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.logging.LogLevel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -18,6 +20,7 @@ import java.net.URISyntaxException;
 @RestController
 @RequestMapping(path="/irrigation/api/v1")
 public class DeviceResource {
+    private static final String className = DeviceResource.class.getName();
 
     @Autowired
     DeviceInfo deviceInfo;
@@ -78,13 +81,22 @@ public class DeviceResource {
 
     /**
      *
-     * @param deviceObj
-     * @param deviceId
-     * @return Updated device object
+     * @param deviceId : Device ID
+     * @param status : Status ON / OFF
+     * @return
      */
-    @PutMapping("/devices/{deviceId}/status")
-    public ResponseEntity<Device> updateDevice(@RequestBody DeviceStatusDTO status) {
-        Device updatedDevice = deviceInfo.updateDeviceStatus(status);
+    @PutMapping("/devices/{deviceId}/status/{status}")
+    public ResponseEntity<Device> updateDevice(@PathVariable("deviceId") String deviceId,
+                                               @PathVariable("status") String status) {
+
+        Device updatedDevice = null;
+        try {
+            updatedDevice = deviceInfo.updateDeviceStatus(Long.valueOf(deviceId), status);
+        } catch (NumberFormatException ne) {
+            Utils.log(ne.getMessage(), LogLevel.INFO, className);
+            return ResponseEntity.notFound().build();
+        }
+
         if (updatedDevice == null) {
             return ResponseEntity.notFound().build();
         } else {

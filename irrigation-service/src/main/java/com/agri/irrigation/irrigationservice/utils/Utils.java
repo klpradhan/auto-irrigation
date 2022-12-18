@@ -8,6 +8,7 @@ public class Utils {
 
     public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public static final String IRRIGATION_SUCCESS_MESG = "Irrigation is successfully done on plot :";
+    public static final String IRRIGATION_FAILURE_MESG = "Failed to irrigate required plot : ";
 
     public static void log(String msg, LogLevel logLevel, String loggerName) {
         Logger LOGGER = LoggerFactory.getLogger(loggerName);

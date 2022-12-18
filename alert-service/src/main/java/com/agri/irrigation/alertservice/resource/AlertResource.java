@@ -1,5 +1,6 @@
 package com.agri.irrigation.alertservice.resource;
 
+import com.agri.irrigation.alertservice.dto.AlertSearchDTO;
 import com.agri.irrigation.alertservice.models.Alert;
 import com.agri.irrigation.alertservice.services.AlertInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class AlertResource {
      * @return Device details
      */
     @GetMapping(path = "/alerts/{alertId}")
-    public ResponseEntity<Alert> getDeviceInfo(@PathVariable("alertId") String alertId) {
+    public ResponseEntity<Alert> getAlertInfo(@PathVariable("alertId") String alertId) {
         Alert foundAlert = alertInfo.getDetails(Long.valueOf(alertId));
         if (foundAlert == null) {
             return ResponseEntity.notFound().build();
@@ -35,15 +36,13 @@ public class AlertResource {
         }
     }
 
-
-
     /**
      * @param alert
      * @return Newly created Device object
-     * @throws URISyntaxException
+     * @throws URISyntaxException failed to register
      */
-    @PostMapping(path = "/devices")
-    public ResponseEntity<Alert> addDevice(@RequestBody Alert alert)
+    @PostMapping(path = "/alerts", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Alert> registerAnAlert(@RequestBody Alert alert)
             throws URISyntaxException {
         Alert createdAlert = alertInfo.register(alert);
         if(createdAlert == null) {

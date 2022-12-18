@@ -24,33 +24,45 @@ public class DeviceInfo {
                 .findById(deviceId)
                 .orElse(null);
         if (deviceObj != null) {
-            return new DeviceDTO(deviceObj.getId(), deviceObj.getSerialNum(), deviceObj.getStatus(), deviceObj.getAvailability(),
+            Utils.log("Found device : " + deviceObj.getSerialNum(), LogLevel.INFO, className);
+            DeviceDTO deviceDTO = new DeviceDTO(deviceObj.getId(), deviceObj.getSerialNum(), deviceObj.getStatus(), deviceObj.getAvailability(),
                     deviceObj.getAlertEmail(), deviceObj.getAlertPhone(), deviceObj.getCreatedDate(), deviceObj.getModifiedDate());
+            Utils.log(deviceDTO.toString(), LogLevel.INFO, className);
+            return deviceDTO;
         } else {
+            Utils.log("Failed to find device : " + deviceId, LogLevel.INFO, className);
             return null;
         }
-
     }
 
     public Device register(Device deviceObj) {
+        Device device = null;
         try {
             deviceRepository.save(deviceObj);
+            device = deviceRepository
+                    .findById(deviceObj.getId())
+                    .orElse(null);
         } catch (DataIntegrityViolationException de) {
             String msg = de.getCause().getMessage();
-            Utils.log(msg, LogLevel.INFO, className);
+            Utils.log(msg, LogLevel.ERROR, className);
+        } finally {
+            return device;
         }
-
-
-        return deviceRepository
-                .findById(deviceObj.getId())
-                .orElse(null);
     }
 
     public Device updateDetails(Device deviceObj) {
-        deviceRepository.save(deviceObj);
-        return deviceRepository
-                .findById(deviceObj.getId())
-                .orElse(null);
+        Device device = null;
+        try {
+            deviceRepository.save(deviceObj);
+            device = deviceRepository
+                    .findById(deviceObj.getId())
+                    .orElse(null);
+        } catch (DataIntegrityViolationException de) {
+            String msg = de.getCause().getMessage();
+            Utils.log(msg, LogLevel.ERROR, className);
+        } finally {
+            return device;
+        }
     }
 
 
@@ -58,10 +70,17 @@ public class DeviceInfo {
         deviceRepository.deleteById(deviceId);
     }
 
-    public Device updateDeviceStatus(DeviceStatusDTO status) {
-        Device obj = deviceRepository.findById(status.getDeviceID()).orElse(null);
-        obj.setStatus(status.getStatus());
-        deviceRepository.save(obj);
-        return deviceRepository.findById(obj.getId()).orElse(null);
+    public Device updateDeviceStatus(Long deviceId, String status) {
+        Device obj = deviceRepository.findById(deviceId).orElse(null);
+        if(obj == null) {
+            Utils.log(Utils.DEVICE_NOT_FOUND_MSG, LogLevel.INFO, className);
+            return null;
+        } else {
+            Utils.log("Found Device : " + obj.getSerialNum(), LogLevel.INFO, className);
+            Utils.log("Updating device status to : " + status, LogLevel.INFO, className);
+            obj.setStatus(status);
+            deviceRepository.save(obj);
+            return deviceRepository.findById(obj.getId()).orElse(null);
+        }
     }
 }

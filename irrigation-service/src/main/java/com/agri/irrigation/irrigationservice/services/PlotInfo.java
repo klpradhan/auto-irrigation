@@ -15,9 +15,8 @@ public class PlotInfo {
     RestTemplate restTemplate;
 
     public PlotDTO getPlotDetails(Long plotId) {
-        PlotDTO plot = restTemplate.getForObject("http://localhost:8081/irrigation/api/v1/plots/"+plotId, PlotDTO.class);
+        PlotDTO plot = restTemplate.getForObject("http://plot-service/irrigation/api/v1/plots/"+plotId, PlotDTO.class);
         Utils.log(plot.toString(), LogLevel.INFO, className);
-        System.out.println(plot.toString());
         return plot;
     }
 }

@@ -16,8 +16,7 @@ public class DeviceInfo {
     RestTemplate restTemplate;
 
     public DeviceDTO getDeviceDetails(Long deviceId) {
-        DeviceDTO device = restTemplate.getForObject("http://localhost:8082/irrigation/api/v1/devices/"+deviceId, DeviceDTO.class);
-        System.out.println(device);
+        DeviceDTO device = restTemplate.getForObject("http://device-service/irrigation/api/v1/devices/"+deviceId, DeviceDTO.class);
         Utils.log(device.toString(), LogLevel.INFO, className);
         return device;
     }

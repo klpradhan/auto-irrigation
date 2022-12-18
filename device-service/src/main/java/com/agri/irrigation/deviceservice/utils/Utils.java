@@ -7,6 +7,7 @@ import org.springframework.boot.logging.LogLevel;
 public class Utils {
 
     public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public static final String DEVICE_NOT_FOUND_MSG = "Requested device not not registered yet";
 
     public static void log(String msg, LogLevel logLevel, String loggerName) {
         Logger LOGGER = LoggerFactory.getLogger(loggerName);

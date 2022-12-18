@@ -1,6 +1,8 @@
 package com.agri.irrigation.plotservice.resource;
 
 import com.agri.irrigation.plotservice.dto.PlotDTO;
+import com.agri.irrigation.plotservice.exceptions.DeviceAlreadyUsedException;
+import com.agri.irrigation.plotservice.exceptions.DeviceNotFoundException;
 import com.agri.irrigation.plotservice.models.Plot;
 import com.agri.irrigation.plotservice.services.PlotInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,7 @@ public class PlotResource {
     PlotInfo plotInfo;
 
     /**
-     * @param plotId
+     * @param plotId plot id (can be replaced with new PLot Serial Number instead of database identity)
      * @return plot details
      */
     @GetMapping(path = "/plots/{plotId}")
@@ -37,14 +39,20 @@ public class PlotResource {
 
     /**
      *
-     * @param plot
+     * @param plot plot id (can be replaced with new PLot Serial Number instead of database identity)
      * @return Newly created Plot
-     * @throws URISyntaxException
+     * @throws URISyntaxException failed to register
      */
     @PostMapping(path = "/plots")
     public ResponseEntity<Plot> addPlotInfo(@RequestBody Plot plot)
             throws URISyntaxException {
-        Plot registeredPlot = plotInfo.register(plot);
+        Plot registeredPlot = null;
+        try {
+            registeredPlot = plotInfo.register(plot);
+        } catch (DeviceAlreadyUsedException | DeviceNotFoundException dane) {
+
+        }
+
         if(registeredPlot == null) {
             return ResponseEntity.notFound().build();
         } else {
@@ -60,13 +68,18 @@ public class PlotResource {
 
     /**
      *
-     * @param plot
-     * @param plotId
+     * @param plot plot details to update
+     * @param plotId plot id (can be replaced with new PLot Serial Number instead of database identity)
      * @return Updated device object
      */
     @PutMapping("/plots/{plotId}")
     public ResponseEntity<Plot> updatePlotInfo(@RequestBody Plot plot, @PathVariable Long plotId) {
-        Plot editedPlot = plotInfo.updateDetails(plot);
+        Plot editedPlot = null;
+        try {
+            editedPlot = plotInfo.register(plot);
+        } catch (DeviceAlreadyUsedException | DeviceNotFoundException dane) {
+            return ResponseEntity.notFound().build();
+        }
         if (editedPlot == null) {
             return ResponseEntity.notFound().build();
         } else {
@@ -76,7 +89,7 @@ public class PlotResource {
 
     /**
      *
-     * @param plotId
+     * @param plotId plot id (can be replaced with new PLot Serial Number instead of database identity)
      * @return status
      */
     @DeleteMapping("/plots/{plotId}")

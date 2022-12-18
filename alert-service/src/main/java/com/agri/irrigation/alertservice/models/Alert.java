@@ -11,6 +11,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
+@Table(name = "alerts")
 public class Alert {
 
     @Setter(AccessLevel.NONE)
@@ -19,13 +20,13 @@ public class Alert {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "plot_id")
+    @Column(name = "plot_id", nullable = false)
     private Long plotId;
 
-    @Column(name = "device_id")
+    @Column(name = "device_id", nullable = false)
     private Long deviceId;
 
-    @Column(name = "created_date")
+    @Column(name = "created_date", nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-DD hh:mm:ss")
     private Date createdDate = new Date();
 
